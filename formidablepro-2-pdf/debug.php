@@ -28,7 +28,7 @@ function fpropdf_debug_page() {
     $debug = array();
     $debug[] = '=== Formidable PRO2PDF ===';
     $debug[] = 'Site URL: ' . site_url('/');
-    $debug[] = 'Plugin folder: ' . basename(dirname(__FILE__));
+    $debug[] = 'Plugin folder: ' . basename(__DIR__);
     $debug[] = 'PHP version: ' . phpversion();
     $debug[] = 'WP version: ' . fpropdf_print(get_bloginfo('version'));
     $debug[] = 'FrmAppHelper: ' . fpropdf_print(class_exists('FrmAppHelper'));
@@ -42,7 +42,7 @@ function fpropdf_debug_page() {
 
     $curl = false;
     if (function_exists('curl_init')) {
-        $request = wp_remote_get(FPROPDF_SERVER . 'update/info.php');
+        $request = wp_remote_get(FPROPDF_SERVER . '/update/info.php?' . time());
         if (is_wp_error($request)) {
             $debug[] = 'CURL error: ' . $request->get_error_message();
         } else {

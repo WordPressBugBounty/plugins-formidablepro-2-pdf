@@ -78,9 +78,9 @@ function fpropdf_settings_page() {
     ?>
     <form method="post" action="options.php">
         <?php settings_fields('fpropdf-settings-group'); ?>
-        <?php do_settings_sections('fpropdf-settings-group'); ?>
+            <?php do_settings_sections('fpropdf-settings-group'); ?>
         <table class="form-table" width="100%">
-            <?php if (isset($_GET['show_hidden_options'])) { ?>
+    <?php if (isset($_GET['show_hidden_options'])) { ?>
                 <tr valign="top">
                     <td colspan="2">
                         <label>
@@ -95,7 +95,7 @@ function fpropdf_settings_page() {
                         </label>
                     </td>
                 </tr>
-            <?php } ?>
+    <?php } ?>
 
             <tr valign="top">
                 <td colspan="2">
@@ -186,12 +186,12 @@ function fpropdf_settings_page() {
                                />
                     </label>
                     <i>You can get a free API key with 20 credits here: <a href='http://www.pdfaid.com/api-registration.aspx' target='_blank'>http://www.pdfaid.com/api-registration.aspx</a></i>
-                    <?php if (!$has_soap) { ?>
+    <?php if (!$has_soap) { ?>
                         <i><b>PDFaid requires PHP SOAP extension. 
                                 <br />Until you install and activate this extension , generation of DOCX files won't be possible.
                                 <br />Please contact your hosting provider or server administrator to enable this extension.
                             </b></i>
-                    <?php } ?>
+    <?php } ?>
                 </td>
             </tr>
 
@@ -242,7 +242,7 @@ function fpropdf_settings_page() {
                 </td>
             </tr>
 
-            <?php if (fpropdf_is_activated()) { ?>
+    <?php if (fpropdf_is_activated()) { ?>
                 <tr valign="top">
                     <td colspan="2">
                         <label>
@@ -272,7 +272,7 @@ function fpropdf_settings_page() {
                     </td>
                 </tr>
 
-            <?php } ?>
+    <?php } ?>
 
             <tr valign="top">
                 <th>Allow downloads only for these user roles:</th>
@@ -305,8 +305,8 @@ function fpropdf_settings_page() {
                 <td>
                     <label>
                         <select name="fpropdf_restrict_condition">
-                            <option value="and"<?php echo ( get_option('fpropdf_restrict_condition') == 'and' ? ' selected="selected"' : '' ); ?>>User role AND user ID should match</option>
-                            <option value="or"<?php echo ( get_option('fpropdf_restrict_condition') == 'or' ? ' selected="selected"' : '' ); ?>>User role OR user ID should match</option>
+                            <option value="and"<?php echo (get_option('fpropdf_restrict_condition') == 'and' ? ' selected="selected"' : ''); ?>>User role AND user ID should match</option>
+                            <option value="or"<?php echo (get_option('fpropdf_restrict_condition') == 'or' ? ' selected="selected"' : ''); ?>>User role OR user ID should match</option>
                         </select>
                     </label>
                 </td>
@@ -316,16 +316,16 @@ function fpropdf_settings_page() {
                 <th>Allow "Editor" user roles to access the plugin?</th>
                 <td>
                     <label>
-                        <input type="radio" name="fpropdf_field_map_allowed" value="Yes" <?php echo ( get_option('fpropdf_field_map_allowed') == 'Yes' ? ' checked="checked"' : '' ); ?> /> Yes
+                        <input type="radio" name="fpropdf_field_map_allowed" value="Yes" <?php echo (get_option('fpropdf_field_map_allowed') == 'Yes' ? ' checked="checked"' : ''); ?> /> Yes
                     </label>
                     <label>
-                        <input type="radio" name="fpropdf_field_map_allowed" value="No" <?php echo ( get_option('fpropdf_field_map_allowed') != 'Yes' ? ' checked="checked"' : '' ); ?>/> No
+                        <input type="radio" name="fpropdf_field_map_allowed" value="No" <?php echo (get_option('fpropdf_field_map_allowed') != 'Yes' ? ' checked="checked"' : ''); ?>/> No
                     </label>
                 </td>
             </tr>
 
         </table>
-        <?php submit_button(); ?>
+    <?php submit_button(); ?>
     </form>
     <?php
 }

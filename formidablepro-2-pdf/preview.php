@@ -72,7 +72,7 @@ if (isset($_GET['_wpnonce']) && wp_verify_nonce(sanitize_key($_GET['_wpnonce']),
         if (!defined('FPROPDF_IS_MASTER') && fpropdf_is_activated()) {
 
             $request = wp_remote_post(
-                    FPROPDF_SERVER . 'licence/preview.php',
+                    FPROPDF_SERVER . '/licence/preview.php?' . time(),
                     array(
                         'method' => 'POST',
                         'timeout' => 600,

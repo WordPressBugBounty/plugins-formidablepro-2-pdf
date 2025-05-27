@@ -29,8 +29,7 @@ function fpropdf_restore_backup($filename, $force_id = false, $duplicate = false
     }
 
     if (isset($currentFileData['xml']) && $currentFileData['xml']) {
-        $tmp = tempnam(PROPDF_TEMP_DIR, 'fproPdfXml');
-
+        $tmp = FPRO2PDF::getInstance()->is_tmp(tempnam(PROPDF_TEMP_DIR, 'fproPdfXml'));
         try {
             if (!file_exists($tmp)) {
                 throw new Exception('Tmp folder ' . PROPDF_TEMP_DIR . ' not exists or not writable');
@@ -55,6 +54,7 @@ function fpropdf_restore_backup($filename, $force_id = false, $duplicate = false
         global $wpdb;
         $dom = new DOMDocument();
         $success = $dom->loadXML(file_get_contents($tmp));
+        FPRO2PDF::getInstance()->flush_tmps();
 
         try {
             if (!$success) {
@@ -156,6 +156,12 @@ function fpropdf_restore_backup($filename, $force_id = false, $duplicate = false
 
     $map = $currentFileData['data'];
     extract($map);
+    if (!array_key_exists('restrict_role', $map)) {
+        $restrict_role = null;
+    }
+     if (!array_key_exists('restrict_user', $map)) {
+        $restrict_user = null;
+    }
 
     global $wpdb;
     $form = $currentFileData['form']['form_key'];

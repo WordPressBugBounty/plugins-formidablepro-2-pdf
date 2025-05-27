@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name: Formidable PRO2PDF
- * Version: 3.18
+ * Version: 3.19
  * Description: This plugin allows to export data from Formidable Pro forms to PDF
  * Author: formidablepro2pdf.com
  * Plugin URI: http://www.formidablepro2pdf.com/
@@ -12,9 +12,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-require_once __DIR__ . '/classes/class-fpropdf-global.php';
-global $fpropdf_global;
-$fpropdf_global = new Fpropdf_Global();
+require_once __DIR__ . '/classes/class-fpro2pdf.php';
+
 $fpropdf_version = get_file_data(__FILE__, array('Version' => 'Version'), false);
 
 define('FPROPDF_VERSION', !empty($fpropdf_version['Version']) ? $fpropdf_version['Version'] : '3.09');
@@ -176,10 +175,7 @@ if (!defined('PROPDF_TEMP_DIR')) {
 // fpropdfTmpFile
 $dir = PROPDF_TEMP_DIR;
 if (file_exists($dir) && is_dir($dir)) {
-    if (substr($dir, strlen($dir) - 1, 1) != '/') {
-        $dir .= '/';
-    }
-
+    $dir = trailingslashit($dir);
     $tmp_files = glob($dir . '*fpropdfTmpFile*', GLOB_MARK);
     foreach ($tmp_files as $file) {
         if (is_file($file) && time() - filemtime($file) >= 60 * 60) {
@@ -279,7 +275,7 @@ function fpropdf_pre_update($transient) {
         define('FPROPDF_PATH', plugin_basename(__FILE__));
     }
     if (!isset($transient->response[FPROPDF_PATH]) && !isset($transient->no_update[FPROPDF_PATH])) {
-        $request = wp_remote_get(FPROPDF_SERVER . 'update/info.php');
+        $request = wp_remote_get(FPROPDF_SERVER . '/update/info.php?' . time());
         $result = array();
         if (!is_wp_error($request)) {
             $result = json_decode(wp_remote_retrieve_body($request), true);
@@ -309,7 +305,7 @@ function fpropdf_changelog() {
     if (1 == 1 || $_REQUEST['plugin'] != 'formidablepro-2-pdf') {
         return;
     }
-    $request = wp_remote_get(FPROPDF_SERVER . 'update/info.php');
+    $request = wp_remote_get(FPROPDF_SERVER . '/update/info.php?' . time());
     $result = array();
     if (!is_wp_error($request)) {
         $result = json_decode(wp_remote_retrieve_body($request), true);
@@ -619,12 +615,12 @@ function wpfx_extract($layout, $id, $custom = false) {
                 }
             }
         }
-        if (( $data['type'] == 'data' ) || ( $data['type'] == 'checkbox' )) {
+        if (($data['type'] == 'data') || ($data['type'] == 'checkbox')) {
             foreach ($fields as $field) {
                 if ($field->id != $row['id']) {
                     continue;
                 }
-                $embedded_field_id = ( $entry->form_id != $field->form_id ) ? 'form' . $field->form_id : 0;
+                $embedded_field_id = ($entry->form_id != $field->form_id) ? 'form' . $field->form_id : 0;
                 $atts = array(
                     'type' => $field->type, 'post_id' => $entry->post_id,
                     'show_filename' => true, 'show_icon' => true, 'entry_id' => $entry->id,
@@ -860,7 +856,7 @@ function fpropdf_is_trial() {
 
 function fpropdf_check_code($code, $update = 0) {
     $request = wp_remote_post(
-            FPROPDF_SERVER . 'licence/check.php',
+            FPROPDF_SERVER . '/licence/check.php?' . time(),
             array(
                 'method' => 'POST',
                 'body' => array(
@@ -902,7 +898,10 @@ function wpfx_addslashes_array($array) {
     }
 }
 
-define('FPROPDF_SERVER', 'http://www.idealchoiceinsurance.com/wp-content/plugins/fpropdf/');
+if (!defined('FPROPDF_SERVER')) {
+    define('FPROPDF_SERVER', 'https://api.formidablepro2pdf.com');
+}
+
 global $wpdb;
 define('FPROPDF_SALT', md5(NONCE_SALT . $wpdb->prefix));
 
@@ -913,7 +912,7 @@ function wpfx_admin() {
     if (class_exists('FrmXMLHelper')) {
         if (get_option('fpropdf_installed_version') >= 20000) {
             if (!get_option('fpropdf_demo_imported')) {
-                fpropdf_restore_backup(dirname(__FILE__) . '/demo.json', 990);
+                fpropdf_restore_backup(__DIR__ . '/demo.json', 990);
                 update_option('fpropdf_demo_imported', 1);
             }
         }
@@ -947,7 +946,7 @@ function wpfx_admin() {
         exit;
     }
 
-    if (isset($_GET['action']) && ( $_GET['action'] == 'deactivatekey' )) {
+    if (isset($_GET['action']) && ($_GET['action'] == 'deactivatekey')) {
         update_option('fpropdf_licence', 'TRIAL' . strtoupper(FPROPDF_SALT));
         echo '<div class="updated"><p>The licence key has been deactivated.</p></div>';
     }
@@ -1295,7 +1294,7 @@ function wpfx_admin() {
     echo '<div id="icon-themes" class="icon32"><br></div>';
     echo '<h2 class="nav-tab-wrapper">';
     foreach ($tabs as $tab => $name) {
-        if (!( fpropdf_is_activated() && !defined('FPROPDF_IS_MASTER') ) && ( $tab == 'forms' )) {
+        if (!(fpropdf_is_activated() && !defined('FPROPDF_IS_MASTER')) && ($tab == 'forms')) {
             continue;
         }
         if ($tab == 'forms') {
@@ -1304,7 +1303,7 @@ function wpfx_admin() {
             }
         }
 
-        $class = ( $tab == $currentTab ) ? ' nav-tab-active' : '';
+        $class = ($tab == $currentTab) ? ' nav-tab-active' : '';
         echo '<a class="nav-tab' . $class . '" href="' . esc_url('?page=fpdf&tab=' . $tab . '') . '">' . esc_html($name) . '</a>';
     }
     echo '</h2>';
@@ -1349,7 +1348,7 @@ function wpfx_admin() {
 
         if (isset($_GET['action']) && $_GET['action'] == 'site_activate') {
             $request = wp_remote_post(
-                    FPROPDF_SERVER . 'licence/licence-change.php',
+                    FPROPDF_SERVER . '/licence/licence-change.php?' . time(),
                     array(
                         'method' => 'POST',
                         'body' => array(
@@ -1377,7 +1376,7 @@ function wpfx_admin() {
 
         if (isset($_GET['action']) && $_GET['action'] == 'form_activate') {
             $request = wp_remote_post(
-                    FPROPDF_SERVER . 'licence/licence-change.php',
+                    FPROPDF_SERVER . '/licence/licence-change.php?' . time(),
                     array(
                         'method' => 'POST',
                         'body' => array(
@@ -1406,7 +1405,7 @@ function wpfx_admin() {
 
         if (isset($_GET['action']) && $_GET['action'] == 'form_deactivate') {
             $request = wp_remote_post(
-                    FPROPDF_SERVER . 'licence/licence-change.php',
+                    FPROPDF_SERVER . '/licence/licence-change.php?' . time(),
                     array(
                         'method' => 'POST',
                         'body' => array(
@@ -1434,7 +1433,7 @@ function wpfx_admin() {
 
         if (isset($_GET['action']) && $_GET['action'] == 'site_deactivate') {
             $request = wp_remote_post(
-                    FPROPDF_SERVER . 'licence/licence-change.php',
+                    FPROPDF_SERVER . '/licence/licence-change.php?' . time(),
                     array(
                         'method' => 'POST',
                         'body' => array(
@@ -1460,7 +1459,7 @@ function wpfx_admin() {
         }
 
         $request = wp_remote_post(
-                FPROPDF_SERVER . 'licence/info.php',
+                FPROPDF_SERVER . '/licence/info.php?' . time(),
                 array(
                     'method' => 'POST',
                     'body' => array(
@@ -1536,7 +1535,6 @@ function wpfx_admin() {
                         echo $site->url . ' (' . $site->title . ')';
 
                         if (property_exists($site, 'not_active') && $site->not_active) {
-
                             echo ' - not active. <a class="" href="?page=fpdf&tab=forms&action=site_activate" style="opacity: 1;">Activate this website</a>';
                             echo '</li>';
                             continue;
@@ -1574,7 +1572,7 @@ function wpfx_admin() {
         add_thickbox();
     }
 
-    echo '<form method = "POST" id="frm-bg" data-limitdropdowns="' . intval(get_option('fpropdf_limit_dropdowns')) . '" data-automap="' . intval(get_option('fpropdf_automap')) . '" data-security="' . intval(fpropdf_enable_security()) . '" data-activated="' . intval(!fpropdf_is_trial()) . '" data-pdfaid="' . ( get_option('fpropdf_pdfaid_api_key') ? '1' : '0' ) . '">';
+    echo '<form method = "POST" id="frm-bg" data-limitdropdowns="' . intval(get_option('fpropdf_limit_dropdowns')) . '" data-automap="' . intval(get_option('fpropdf_automap')) . '" data-security="' . intval(fpropdf_enable_security()) . '" data-activated="' . intval(!fpropdf_is_trial()) . '" data-pdfaid="' . (get_option('fpropdf_pdfaid_api_key') ? '1' : '0') . '">';
     echo '<table>';
     echo '<tr>';
     echo '<td width="300">Select the form to export data from:</td>';
@@ -1783,7 +1781,7 @@ function wpfx_getforms($show_id = false) {
     );
 
     foreach ($result as $row) {
-        $array[($show_id ? $row['id'] : $row['form_key'] )] = array(stripslashes($row['name']), $row['created_at'], $row['id']);
+        $array[($show_id ? $row['id'] : $row['form_key'])] = array(stripslashes($row['name']), $row['created_at'], $row['id']);
     }
 
     return $array;
@@ -2148,7 +2146,7 @@ function wpfx_getdataset() {
 
         $fields = FrmField::get_all_for_form($fid, '', 'include');
 
-        if (!$results || ( count($results) == 0 )) {
+        if (!$results || (count($results) == 0)) {
             $array = array(
                 array(
                     'id' => -3,
@@ -2253,7 +2251,7 @@ function wpfx_getdataset() {
                     if ($field->id != $layout['count']) {
                         continue;
                     }
-                    $embedded_field_id = ( $entry->form_id != $field->form_id ) ? 'form' . $field->form_id : 0;
+                    $embedded_field_id = ($entry->form_id != $field->form_id) ? 'form' . $field->form_id : 0;
                     $atts = array(
                         'type' => $field->type, 'post_id' => $entry->post_id,
                         'show_filename' => true, 'show_icon' => true, 'entry_id' => $entry->id,
@@ -2403,7 +2401,7 @@ function wpfx_peeklayout() {
                 if (isset($row->field_options)) {
                     $field_options = @unserialize($row->field_options);
                 }
-                if (( $row->type == 'file' ) || ( $row->type == 'signature' ) || ( $row->type == 'image' ) || ($row->type == 'url' && isset($field_options['show_image']) && $field_options['show_image'] == '1')) {
+                if (($row->type == 'file') || ($row->type == 'signature') || ($row->type == 'image') || ($row->type == 'url' && isset($field_options['show_image']) && $field_options['show_image'] == '1')) {
                     $_row_id = $row->id;
                     if (fpropdf_use_field_keys()) {
                         $_row_id = fpropdf_field_id_to_key($_row_id);
@@ -2461,7 +2459,7 @@ function wpfx_peeklayout() {
                 }
 
                 $request = wp_remote_post(
-                        FPROPDF_SERVER . 'licence/data.php?' . time(),
+                        FPROPDF_SERVER . '/licence/data.php?' . time(),
                         array(
                             'method' => 'POST',
                             'timeout' => 600,
@@ -2688,7 +2686,7 @@ add_filter('frm_notification_attachment', 'fpropdf_add_my_attachment', 10, 3);
 
 function fpropdf_add_my_attachment($attachments, $form, $args) {
 
-    global $wpdb, $fpropdf_global, $fpropdfSignatures;
+    global $wpdb, $fpropdfSignatures;
 
     if (!defined('FPROPDF_IS_SENDING_EMAIL')) {
         define('FPROPDF_IS_SENDING_EMAIL', true);
@@ -2715,7 +2713,7 @@ function fpropdf_add_my_attachment($attachments, $form, $args) {
             $ids = explode(',', $layout['add_att_ids']);
             $found = false;
             foreach ($ids as $id) {
-                if (( $id == 'all' ) || ( $id == $args['email_key'] )) {
+                if (($id == 'all') || ($id == $args['email_key'])) {
                     $found = true;
                 }
             }
@@ -2768,8 +2766,7 @@ function fpropdf_add_my_attachment($attachments, $form, $args) {
         if ($filename) {
             $tmp = __DIR__ . '/fields/' . $filename;
             file_put_contents($tmp, $data);
-            $attachments[] = $tmp;
-            $fpropdf_global->addAttachmentToRemove($tmp);
+            $attachments[] = FPRO2PDF::getInstance()->is_attachment($tmp);
         }
     }
 
@@ -2821,19 +2818,7 @@ function importing_fields_meta_fix($imported, $xml) {
 add_action('frm_notification', 'fpropdf_remove_my_attachment', 10, 3);
 
 function fpropdf_remove_my_attachment() {
-    global $fpropdf_global;
-
-    $attachments = $fpropdf_global->getAttachmentsToRemove();
-
-    if (!empty($attachments)) {
-        foreach ($attachments as $attachment) {
-            if (file_exists($attachment)) {
-                @unlink($attachment);
-            }
-        }
-    }
-
-    $fpropdf_global->flush();
+    FPRO2PDF::getInstance()->flush_attachments();
 }
 
 // Shortcode

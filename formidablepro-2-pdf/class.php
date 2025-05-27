@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-require_once dirname(__FILE__) . '/format.php';
+require_once __DIR__ . '/format.php';
 
 class FDFMaker {
 
@@ -34,7 +34,7 @@ class FDFMaker {
         foreach ($defaults as $k => $v) {
             $found = false;
             foreach ($data as $key => $values) {
-                if (( $values[0] == $k ) && $values[1]) {
+                if (($values[0] == $k) && $values[1]) {
                     $found = true;
                 }
             }
@@ -74,7 +74,7 @@ class FDFMaker {
         foreach ($defaults as $k => $v) {
             $found = false;
             foreach ($data as $key => $values) {
-                if (( $values[0] == $k ) && $values[1]) {
+                if (($values[0] == $k) && $values[1]) {
                     $found = true;
                 }
             }
@@ -157,7 +157,7 @@ class FDFMaker {
         if ($separateRepeatable) {
             foreach ($separateRepeatable as $key => $vals) {
                 foreach ($vals as $index => $val) {
-                    $data[] = array($key . ( $index + 1 ), $val);
+                    $data[] = array($key . ($index + 1), $val);
                 }
             }
         }
@@ -219,5 +219,4 @@ class FDFMaker {
 
         return $fdf;
     }
-
 }

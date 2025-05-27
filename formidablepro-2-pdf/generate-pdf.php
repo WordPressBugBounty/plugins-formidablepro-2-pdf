@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if (!function_exists('fpropdf_header')) {
+if (!function_exists('fpropdf_transliterate_string')) {
 
     function fpropdf_transliterate_string($txt) {
         $transliterationTable = array(
@@ -45,7 +45,7 @@ if (isset($_POST['wpfx_submit_nonce']) && wp_verify_nonce(sanitize_key($_POST['w
     $actual = $post_actual;
     $actual2 = isset($_POST['actual2']) ? sanitize_text_field(wp_unslash($_POST['actual2'])) : null;
     $flatten = isset($_POST['lock']) && intval($_POST['lock']) ? 'flatten' : '';
-    $real_flatten = (isset($_POST['lock']) && intval($_POST['lock']) == 2 );
+    $real_flatten = (isset($_POST['lock']) && intval($_POST['lock']) == 2);
     $lang = isset($_POST['lang']) && $_POST['lang'] ? intval($_POST['lang']) : false;
 
     $format = isset($_REQUEST['format']) ? sanitize_text_field(wp_unslash($_REQUEST['format'])) : null;
@@ -175,16 +175,11 @@ if (isset($_POST['wpfx_submit_nonce']) && wp_verify_nonce(sanitize_key($_POST['w
 
     if (is_callable('shell_exec') && is_callable('escapeshellarg') && shell_exec('which pdftk') && is_callable('passthru') && (defined('FPROPDF_IS_MASTER') || get_option('fpropdf_enable_local') || get_option('fpropdf_licence') == 'OFFLINE_SITE')) {
         if ($actual2 && $actual2 != "''") {
-            $tmp = escapeshellarg(tempnam(PROPDF_TEMP_DIR, 'fpropdfTmpFile') . '.pdf');
-            $desired = escapeshellarg($desired);
-            $actual = escapeshellarg($actual);
-            $actual2 = escapeshellarg($actual2);
-            shell_exec("pdftk $desired fill_form $actual output $tmp 2>&1");
-            $command = "pdftk $tmp fill_form $actual2 output $tmpPdf $flatten";
+            $tmp = FPRO2PDF::getInstance()->is_tmp(FPRO2PDF::getInstance()->is_tmp(tempnam(PROPDF_TEMP_DIR, 'fpropdfTmpFile')) . '.pdf');
+            shell_exec("pdftk " . escapeshellarg($desired) . " fill_form " . escapeshellarg($actual) . " output " . escapeshellarg($tmp) . " 2>&1");
+            $command = "pdftk $tmp fill_form " . escapeshellarg($actual2) . " output $tmpPdf $flatten";
         } else {
-            $desired = escapeshellarg($desired);
-            $actual = escapeshellarg($actual);
-            $command = "pdftk $desired fill_form $actual output $tmpPdf $flatten";
+            $command = "pdftk " . escapeshellarg($desired) . " fill_form " . escapeshellarg($actual) . " output $tmpPdf $flatten";
         }
 
         ob_start();
@@ -192,13 +187,12 @@ if (isset($_POST['wpfx_submit_nonce']) && wp_verify_nonce(sanitize_key($_POST['w
         $buffer = ob_get_clean();
 
         if ($real_flatten && shell_exec('which convert')) {
-            $tmpPdf = tempnam(PROPDF_TEMP_DIR, 'fpropdfTmpFile') . '.pdf';
-            $tmpDir = tempnam(PROPDF_TEMP_DIR, 'fpropdfTmpFile') . '-jpgs';
+            $tmpPdf = FPRO2PDF::getInstance()->is_tmp(FPRO2PDF::getInstance()->is_tmp(tempnam(PROPDF_TEMP_DIR, 'fpropdfTmpFile')) . '.pdf');
+            $tmpDir = FPRO2PDF::getInstance()->is_tmp(FPRO2PDF::getInstance()->is_tmp(tempnam(PROPDF_TEMP_DIR, 'fpropdfTmpFile')) . '-jpgs');
             @mkdir($tmpDir);
             file_put_contents($tmpPdf, $buffer);
-
             $filesTmp = array();
-            shell_exec('convert -density 300 ' . escapeshellarg($tmpPdf) . ' ' . escapeshellarg($tmpDir . '/%04d.jpg') . ' 2>&1');
+            shell_exec('convert -background white -alpha remove -density 300 ' . escapeshellarg($tmpPdf) . ' ' . escapeshellarg($tmpDir . '/%04d.jpg') . ' 2>&1');
             $handle = opendir($tmpDir);
             $entries = array();
             while (false !== ($entry = readdir($handle))) { //phpcs:ignore
@@ -220,24 +214,12 @@ if (isset($_POST['wpfx_submit_nonce']) && wp_verify_nonce(sanitize_key($_POST['w
             }
 
             $buffer = shell_exec('pdftk ' . implode(' ', $filesTmp) . ' cat output - ');
-            shell_exec('rm -fr ' . $tmpDir);
-            if (file_exists($tmpPdf) && is_file($tmpPdf)) {
-                @unlink($tmpPdf);
-            }
-        }
-
-        if (file_exists($tmp) && is_file($tmp)) {
-            @unlink($tmp);
         }
         $data = $buffer;
-
         if ($data && $encrypt) {
-            $tmpPdf = tempnam(PROPDF_TEMP_DIR, 'fpropdfTmpFile') . '.pdf';
+            $tmpPdf = FPRO2PDF::getInstance()->is_tmp(FPRO2PDF::getInstance()->is_tmp(tempnam(PROPDF_TEMP_DIR, 'fpropdfTmpFile')) . '.pdf');
             file_put_contents($tmpPdf, $data);
             $data = shell_exec('pdftk ' . escapeshellarg($tmpPdf) . ' output - ' . $encrypt);
-            if (file_exists($tmpPdf) && is_file($tmpPdf)) {
-                @unlink($tmpPdf);
-            }
         }
     }
 
@@ -318,7 +300,7 @@ if (isset($_POST['wpfx_submit_nonce']) && wp_verify_nonce(sanitize_key($_POST['w
                 $new_post_data['hash'] = md5_file($post_data['desired']);
 
                 $request = wp_remote_post(
-                        FPROPDF_SERVER . 'licence/pdf_uploaded.php',
+                        FPROPDF_SERVER . '/licence/pdf_uploaded.php?' . time(),
                         array(
                             'method' => 'POST',
                             'timeout' => 600,
@@ -360,7 +342,7 @@ if (isset($_POST['wpfx_submit_nonce']) && wp_verify_nonce(sanitize_key($_POST['w
             $post_data['upload_pdf'] = intval($upload_pdf);
 
             $request = wp_remote_post(
-                    FPROPDF_SERVER . 'licence/pdftk.php?' . time(),
+                    FPROPDF_SERVER . '/licence/pdftk.php?' . time(),
                     array(
                         'method' => 'POST',
                         'timeout' => 600,
@@ -394,12 +376,11 @@ if (isset($_POST['wpfx_submit_nonce']) && wp_verify_nonce(sanitize_key($_POST['w
 
                     $key = isset($_REQUEST['fpropdf_pdfaid_api_key']) ? sanitize_text_field(wp_unslash($_REQUEST['fpropdf_pdfaid_api_key'])) : trim(get_option('fpropdf_pdfaid_api_key'));
 
-                    require dirname(__FILE__) . '/PdfaidServices.php';
+                    require_once __DIR__ . '/PdfaidServices.php';
 
-                    $tmpPdf = tempnam(PROPDF_TEMP_DIR, 'fpropdfTmpFile') . '.pdf';
+                    $tmpPdf = FPRO2PDF::getInstance()->is_tmp(FPRO2PDF::getInstance()->is_tmp(tempnam(PROPDF_TEMP_DIR, 'fpropdfTmpFile')) . '.pdf');
                     file_put_contents($tmpPdf, $data);
-
-                    $tmpDocx = tempnam(PROPDF_TEMP_DIR, 'fpropdfTmpFile') . '.docx';
+                    $tmpDocx = FPRO2PDF::getInstance()->is_tmp(FPRO2PDF::getInstance()->is_tmp(tempnam(PROPDF_TEMP_DIR, 'fpropdfTmpFile')) . '.docx');
 
                     $myPdf2Doc = new Pdf2Doc();
                     $myPdf2Doc->apiKey = $key;
@@ -416,14 +397,12 @@ if (isset($_POST['wpfx_submit_nonce']) && wp_verify_nonce(sanitize_key($_POST['w
                             $docxError = 'PDFaid API returned an empty file. Probably API key is wrong, or your file cannot be processed.';
                         }
                     }
-
-                    @unlink($tmpPdf);
-                    @unlink($tmpDocx);
                 }
             }
         }
     }
 
+    FPRO2PDF::getInstance()->flush_tmps();
     if (!$data) {
         ob_start();
         fpropdf_header('Content-Type: text/html; charset=utf-8');
