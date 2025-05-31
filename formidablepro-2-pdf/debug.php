@@ -64,11 +64,11 @@ function fpropdf_debug_page() {
 
     $debug[] = '';
     $debug[] = '=== Formidable PRO2PDF PDFTK ===';
-    $debug[] = is_callable('shell_exec') ? str_replace(array("\n", "\r"), ' ', shell_exec('uname -a')) : '';
-    $debug[] = 'Shell Exec: ' . fpropdf_print(is_callable('shell_exec'));
-    $debug[] = 'PDFTK: ' . fpropdf_print(is_callable('shell_exec') && shell_exec('which pdftk'));
-    $debug[] = 'ImageMagick: ' . fpropdf_print(is_callable('shell_exec') && shell_exec('which convert'));
-    $debug[] = 'Passthru: ' . fpropdf_print(is_callable('passthru'));
+    $debug[] = function_exists('shell_exec') && is_callable('shell_exec') ? str_replace(array("\n", "\r"), ' ', shell_exec('uname -a')) : '';
+    $debug[] = 'Shell Exec: ' . fpropdf_print(function_exists('shell_exec') && is_callable('shell_exec'));
+    $debug[] = 'PDFTK: ' . fpropdf_print(function_exists('shell_exec') && is_callable('shell_exec') && shell_exec('which pdftk'));
+    $debug[] = 'ImageMagick: ' . fpropdf_print(function_exists('shell_exec') && is_callable('shell_exec') && shell_exec('which convert'));
+    $debug[] = 'Passthru: ' . fpropdf_print(function_exists('passthru') && is_callable('passthru'));
 
     $debug = implode("\n", $debug);
     ?>

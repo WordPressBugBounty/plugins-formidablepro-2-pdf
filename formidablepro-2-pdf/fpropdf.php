@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name: Formidable PRO2PDF
- * Version: 3.19
+ * Version: 3.20
  * Description: This plugin allows to export data from Formidable Pro forms to PDF
  * Author: formidablepro2pdf.com
  * Plugin URI: http://www.formidablepro2pdf.com/
@@ -10,6 +10,10 @@
  */
 if (!defined('ABSPATH')) {
     exit;
+}
+
+if (!defined('FPROPDF_SERVER')) {
+    define('FPROPDF_SERVER', 'https://api.formidablepro2pdf.com');
 }
 
 require_once __DIR__ . '/classes/class-fpro2pdf.php';
@@ -160,7 +164,7 @@ if (!defined('PROPDF_TEMP_DIR')) {
         define('PROPDF_TEMP_DIR', $temp_dir);
     }
     if (!defined('PROPDF_TEMP_DIR')) {
-        if (is_callable('ini_get')) {
+        if (function_exists('ini_get') && is_callable('ini_get')) {
             $temp_dir = ini_get('upload_tmp_dir');
             if (is_dir($temp_dir) && is_writable($temp_dir) && is_readable($temp_dir)) {
                 define('PROPDF_TEMP_DIR', $temp_dir);
@@ -896,10 +900,6 @@ function wpfx_addslashes_array($array) {
     } else {
         return is_array($array) ? array_map('wpfx_addslashes_array', $array) : addslashes($array);
     }
-}
-
-if (!defined('FPROPDF_SERVER')) {
-    define('FPROPDF_SERVER', 'https://api.formidablepro2pdf.com');
 }
 
 global $wpdb;
@@ -2330,7 +2330,12 @@ function wpfx_peeklayout() {
             }
 
             $fields_data = "";
-            if (is_callable('shell_exec') && is_callable('escapeshellarg') && shell_exec('which pdftk') && (defined('FPROPDF_IS_MASTER') || get_option('fpropdf_enable_local') || get_option('fpropdf_licence') == 'OFFLINE_SITE')) {
+            if (
+                    (defined('FPROPDF_IS_MASTER') || get_option('fpropdf_enable_local') || get_option('fpropdf_licence') == 'OFFLINE_SITE') &&
+                    function_exists('shell_exec') && is_callable('shell_exec') &&
+                    function_exists('escapeshellarg') && is_callable('escapeshellarg') &&
+                    shell_exec('which pdftk')
+            ) {
                 $fields_data = shell_exec('pdftk ' . escapeshellarg($file) . ' dump_data_fields_utf8 2> /dev/null');
             }
 

@@ -172,7 +172,7 @@ if (!function_exists('fpropdf_format_field')) {
 
         $additional = apply_filters('fpropdf_additional_formatting', array());
         foreach ($additional as $title => $callback) {
-            if (!is_callable($callback) && !function_exists($callback)) {
+            if (!function_exists($callback) && !is_callable($callback)) {
                 continue;
             }
             if ($format != $title) {

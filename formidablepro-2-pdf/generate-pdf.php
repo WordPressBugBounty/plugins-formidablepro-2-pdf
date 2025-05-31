@@ -173,7 +173,13 @@ if (isset($_POST['wpfx_submit_nonce']) && wp_verify_nonce(sanitize_key($_POST['w
     ob_start();
     $data = ob_get_clean();
 
-    if (is_callable('shell_exec') && is_callable('escapeshellarg') && shell_exec('which pdftk') && is_callable('passthru') && (defined('FPROPDF_IS_MASTER') || get_option('fpropdf_enable_local') || get_option('fpropdf_licence') == 'OFFLINE_SITE')) {
+    if (
+            (defined('FPROPDF_IS_MASTER') || get_option('fpropdf_enable_local') || get_option('fpropdf_licence') == 'OFFLINE_SITE') &&
+            function_exists('shell_exec') && is_callable('shell_exec') &&
+            function_exists('escapeshellarg') && is_callable('escapeshellarg') &&
+            function_exists('passthru') && is_callable('passthru') &&
+            shell_exec('which pdftk')
+    ) {
         if ($actual2 && $actual2 != "''") {
             $tmp = FPRO2PDF::getInstance()->is_tmp(FPRO2PDF::getInstance()->is_tmp(tempnam(PROPDF_TEMP_DIR, 'fpropdfTmpFile')) . '.pdf');
             shell_exec("pdftk " . escapeshellarg($desired) . " fill_form " . escapeshellarg($actual) . " output " . escapeshellarg($tmp) . " 2>&1");
