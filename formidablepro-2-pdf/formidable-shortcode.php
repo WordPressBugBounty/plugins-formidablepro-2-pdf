@@ -111,6 +111,9 @@ function formidable_shortcode_download($atts = array(), $content = '') {
     if (get_option('fpropdf_enable_security')) {
         $args['key'] = fpropdf_dataset_key(isset($args['dataset']) ? $args['dataset'] : null, $args['form'], $args['layout'], isset($args['user']) ? $args['user'] : null, isset($args['role']) ? $args['role'] : null, isset($args['condition']) ? $args['condition'] : null);
         if (isset($args['dataset2']) && $args['dataset2']) {
+            $args['user'] = isset($args['user']) ? $args['user'] : '';
+            $args['role'] = isset($args['role']) ? $args['role'] : '';
+            $args['condition'] = isset($args['condition']) ? $args['condition'] : '';
             $args['key2'] = fpropdf_dataset_key($args['dataset2'], $args['form2'], $args['layout2'], $args['user'], $args['role'], $args['condition']);
         }
     }

@@ -323,7 +323,7 @@ if (!function_exists('fpropdf_format_field')) {
                 }
 
                 if (is_array($v)) {
-                    $_opts = @json_decode($_format[3]);
+                    $_opts = isset($_format[3]) ? @json_decode($_format[3]) : array();
                     if ($_opts && is_array($_opts) && count($_opts)) {
                         foreach ($v as $_k => $_v) {
                             if (!in_array($_v, $_opts)) {
@@ -374,7 +374,7 @@ if (!function_exists('fpropdf_format_field')) {
 
                 $fpropdfSignatures[] = array(
                     'data' => $v,
-                    'alignment' => $_format[4],
+                    'alignment' => isset($_format[4]) ? $_format[4] : 'top_left',
                     'rotation' => isset($_format[7]) ? $_format[7] : '0',
                     'field' => $key,
                 );
@@ -424,7 +424,7 @@ if (!function_exists('fpropdf_format_field')) {
                     }
 
                     foreach ($v as $id) {
-                        $string = $_format[2];
+                        $string = isset($_format[2]) ? $_format[2] : '';
 
                         global $wpdb;
                         $rows = $wpdb->get_results(
@@ -669,7 +669,7 @@ if (!function_exists('fpropdf_format_field')) {
 
                 if ($format == 'repeatable2') {
 
-                    $_opts = @json_decode($_format[3]);
+                    $_opts = isset($_format[3]) ? @json_decode($_format[3]) : array();
                     if ($_opts && is_array($_opts) && count($_opts)) {
                         foreach ($vals as $val_key => $vvals) {
                             if (in_array($vvals, $_opts)) {
@@ -710,7 +710,7 @@ if (!function_exists('fpropdf_format_field')) {
 
             case 'address':
                 $v = @unserialize($v);
-                $string = $_format[5];
+                $string = isset($_format[5]) ? $_format[5] : '';
 
                 if (is_array($v)) {
                     foreach ($v as $key => $val) {
@@ -742,7 +742,7 @@ if (!function_exists('fpropdf_format_field')) {
 
             case 'credit_card':
                 $v = @unserialize($v);
-                $string = $_format[6];
+                $string = isset($_format[6]) ? $_format[6] : '';
 
                 if (is_array($v)) {
                     foreach ($v as $key => $val) {
@@ -829,7 +829,7 @@ if (!function_exists('fpropdf_format_field')) {
 
             default:
                 if (is_array($v)) {
-                    $_opts = @json_decode($_format[3]);
+                    $_opts = isset($_format[3]) ? @json_decode($_format[3]) : array();
                     if ($_opts && is_array($_opts) && count($_opts)) {
                         $_opts2 = str_replace('&amp;', '&', $_opts);
 
@@ -863,7 +863,7 @@ if (!function_exists('fpropdf_format_field')) {
                 $fpropdfSignatures[] = array(
                     'data' => serialize(base64_encode(file_get_contents(ABSPATH . $m[1]))),
                     'field' => $key,
-                    'alignment' => $_format[4],
+                    'alignment' => isset($_format[4]) ? $_format[4] : 'top_left',
                     'rotation' => isset($_format[7]) ? $_format[7] : '0',
                     'is_file' => basename($m[1]),
                 );
@@ -880,7 +880,7 @@ if (!function_exists('fpropdf_format_field')) {
                 $fpropdfSignatures[] = array(
                     'data' => serialize($m[2]),
                     'field' => $key,
-                    'alignment' => $_format[4],
+                    'alignment' => isset($_format[4]) ? $_format[4] : 'top_left',
                     'rotation' => isset($_format[7]) ? $_format[7] : '0',
                     'is_file' => $m[1],
                 );

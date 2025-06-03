@@ -4,7 +4,7 @@ Donate link: http://formidablepro2pdf.com/
 Tags: pro2pdf, pdf, generation, pdftk, formidable, forms, create
 Requires at least: 3.0.1
 Tested up to: 6.8
-Stable tag: 3.20
+Stable tag: 3.21
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,8 +40,6 @@ Features:
 * Works with Formidable Embedded Forms
 * Unlimited Forms/Sites Available
 
-
-
 Visit the [Formidable PRO2PDF website](http://www.formidablepro2pdf.com/) to compare versions, review documentation, and for support.
 
 [youtube http://www.youtube.com/watch?v=zOA-rGyv-js]
@@ -54,7 +52,6 @@ This section describes how to install the plugin and get it working.
 1. Visit 'Plugins → Add New'
 2. Search for 'Formidable PRO2PDF'
 3. Activate Formidable PRO2PDF from your Plugins page.
-
 
 = From WordPress.org = 
 
@@ -117,12 +114,13 @@ Yes, the plugin works with WordPress Multisite. Site limits still apply.
 
 == Changelog ==
 
-= 3.20 =
+= 3.21 =
+Minor warnings fix
 
+= 3.20 =
 Minor warnings fix
 
 = 3.19 =
-
 PDF generation improvement
 Temporary files management
 
@@ -185,587 +183,130 @@ Optimization
 Minor bug fixes and improvements
 
 = 2.99 =
-"Address field" support for repeatable section
-"Credit Card" field support for repeatable section
 
-= 2.98 =
-Additional formatting option for date DD/MM/YY
-Additional formatting options for numbers 1000, 1000.00, Intval
-"Lowercase" format option
-
-= 2.97 =
-Restrict remote requests on local PDFTK fail option
-
-= 2.96 =
-Checkbox "ampersand" value fails in some cases
-
-= 2.95 =
-Missed value if field connected to "Create Post" action
-
-= 2.94 =
-Signatures missed with "Do not store entries" option
-Incorrect warnings in some cases
-
-= 2.93 =
-Duplicate Signatures in some cases
-
-= 2.92 =
-Create and Overwrite Web Form/PDF/Field Map option
-
-= 2.91 =
-Loopback request fix
-
-= 2.90 =
-Minor warning fixes
-
-= 2.89 =
-'Rotation' option for images
-
-= 2.88 =
-'fpro2pdf_signature' filter
-
-= 2.87 =
-Field key parameter for 'fpro2pdf_sig_output_options' filter
-
-= 2.86 =
+"Address" and "Credit Card" fields support for repeatable sections
 Repeatable 'if' conditions
-'fpro2pdf_sig_output_options' filter
-
-= 2.85 =
-'fpro2pdf-date' shortcode
-
-= 2.84 =
-'Attachment' function compatibility fix
-
-= 2.83 =
-Update fix
-
-= 2.82 =
-Website/Url 'show the image' option fix for Formidable 3.x
-
-= 2.81 =
-Duplicate 'fail' fix
-
-= 2.80 =
-Signature 'serialized' fix
-
-= 2.79 =
-Signature field fix for Formidable 3.x
-
-= 2.78 =
-'fpropdf_wpfx_extract_fields' filter added
-
-= 2.77 =
-Correct rendering [id] inside Dynamic field
-
-= 2.76 =
 Repeatable checkboxes fix
-
-= 2.75 =
-Signature PHP warning fix
-
-= 2.74 =
-Minor fixes
-
-= 2.73 =
-'Notice' error_reporting frontend fix
-
-= 2.72 =
-'Notice' error_reporting fix (Generate/Download)
-
-= 2.71 =
-'Notice' error_reporting fix
-
-= 2.70 =
-Empty phone number format fix
-
-= 2.69 =
-Multiple select field fix
-
-= 2.68 =
-Repeatable Multiple select field fix
-
-= 2.67 =
-Dynamic field multiply shortcodes fix 
-
-= 2.66 =
-Formidable: Dynamic field added
-
-= 2.65 =
-Dynamic password fix
-
-= 2.64 =
-Dynamic attachment name/password fix when form using IDs
-
-= 2.63 =
-Dynamic password
-
-= 2.62 =
-Option "Do not store entries" - empty data pdf fix
-
-= 2.61 =
-Dynamic email attachment name (by Field ID)
-
-= 2.60 =
-č unicode fix
-
-= 2.59 =
-Uninstall db fix
-
-= 2.58 =
-Update version control
-
-= 2.57 =
-Backup restore entries fix
-
-= 2.56 =
-/tmp folder check
-
-= 2.55 =
-Formidable check fix
-
-= 2.54 =
-Select field text fix
-
-= 2.53 =
-Restore backup fix
-
-= 2.52 =
-PDF file name fix
-
-= 2.51 =
-UTF-8 fix
-
-= 2.50 =
-Bugfix for encoding data
-
-= 2.49 =
-Bugfix for import field map
-
-= 2.48 =
-Bugfix for show active websites
-
-= 2.47 =
+Repeatable multiple select field fix
+Field keys in repeatable fields
+Improved repeatable fields
+Additional formatting options for date DD/MM/YY, numbers (1000, 1000.00, Intval), and "Lowercase" format
+Additional date formats
+Bugfix for Capitalize ALL formatting option
+Duplicate signatures fix
+Signature field fixes for Formidable 3.x including serialized and PHP warning fixes
+Signatures missed with "Do not store entries" option
+Filters: 'fpro2pdf_signature', 'fpro2pdf_sig_output_options', 'fpropdf_wpfx_extract_fields'
+‘Rotation’ option for images
+Added field to change PDF file name in emails
+PDF filename bugfix for Firefox
+Bugfix for generated PDF hook and multiple PDF attachments
+Fixing failed to load PDF issues
+Plugin hook for saving PDFs
+Added conversion to DOCX using PDFaid
+New flatten option to transform text into images preventing copy-paste
+Secure download links
+Option to restrict remote requests on local PDFTK fail
+Bugfix for special UTF-8 characters, unicode support including č unicode fix
+Bugfix for encoding data and import field map
 Bugfix for format for same line [line1] [line2]
-
-= 2.46 =
-Bugfix for field names in PDF
-
-= 2.45 =
+Bugfix for field names in PDF (IP, item key, etc.)
+Formidable dynamic field added
+Dynamic password and dynamic attachment name/password fix when form uses IDs
+Dynamic email attachment name (by Field ID)
+Dynamic field multiply shortcodes fix
+Bugfix for attachment function compatibility
 Delete 'Pdf' attachments after sending mail
-
-= 2.44 =
+Possibility to select which email notifications include PDF attachments
+Checkbox "ampersand" value fix and ampersand bugfix after Formidable update
+Missed value if field connected to "Create Post" action
+Incorrect warnings fix, minor warning fixes, prevent unnecessary error messages in PHP error log
+Loopback request fix
+Duplicate 'fail' fix
+'Notice' error_reporting fixes for frontend, generate/download, and general
+Empty phone number format fix
+Multiple select field fix
+Bugfix for disabled mbstring
+Bugfix for temp directory detection and optimization of temp directory cleaning
+Uninstall DB fix and uninstall hooks to delete all plugin data
+Backup restore entries fix and restore backup fix
+Bugfix for show active websites and offline sites
+Bugfix for slash issues and empty shortcode issue
+Bugfix for compatibility with some other plugins
+Bugfix for automatic field map creation
+Bugfix for checkboxes/radio labels and multiple checkboxes bugfix (including non-premium users)
+Bugfix for version notification and after MySQL functions update
+Bugfix for PDF file name
+Select field text fix
+Image URL field bugfix
+Upload folder permission issue fix
+Bugfix for carriage return to comma and shortcode empty issue
+Bugfix for offline sites
+Bugfix for import field map
+Compatibility with WP 4.3 and 4.5
+Compatibility with MariaDB and PHP7
+Removed deprecated mysql_* functions
+Check if mysql_connect() exists and show error if not
+Compatibility fixes for Formidable 3.x and offline sites
+Create and overwrite Web Form/PDF/Field Map option
+Added settings page where field previews won’t slow down field map designer unless enabled
+Added automatic backups and automatic mapping for new field maps
 Add link in admin under ACTIVATED FORMS tab
-
-= 2.43 =
-'Unicode' language support
-
-= 2.42 =
-Show only current site url in admin 
-
-= 2.41 =
-
-'Upload' folders permission issue.
-
-= 2.40 =
-
-'Carriage return to comma' and  shortcode empty issue
-
-= 2.39 =
-
-Bugfix for empty short code issue.
-
-= 2.38 =
-
-Bugfix for slahes issue.
-
-= 2.37 =
-
-Bugfix for compatipility with some other plugins.
-
-= 2.35 =
-
-Allow editors to manage fieldsets. 
-
-= 2.34 =
-
-Optimize getting the dataset field options.
-
-= 2.33 =
-
-Bugfix for signature.
-
-= 2.32 =
-
-Bugfix for the Image URL field.
-
-= 2.31 =
-
-Bugfix for temp directory detection.
-Bugfix for signature.
-Temp directory cleaning optimization.
-
-= 2.30 =
-
-Bugfix for disabled mbstring.
-
-= 2.29 =
-
-Multiple checkboxes bugfix.
-
-= 2.28 =
-
-Add Address and Credit Card fields.
-Ampersand bugfix after Formidable Forms update.
-
-= 2.27 =
-
-Prevent unnecessary error messages in the PHP error log.
-Bugfix for version notification.
-
-= 2.26 =
-
-Bugfix after MySQL functions update.
-
-= 2.25 =
-
-Bugfix after MySQL functions update.
-
-= 2.24 =
-
-Compatibility with MariaDB and PHP7.
-Removed mysql_* functions.
-
-= 2.23 =
-
-Check if mysql_connect() function exists, and show an error message if it doesn't.
-
-= 2.22 =
-
-Compatibility with WP 4.5
-
-= 2.21 =
-
-Fixing Failed to load PDF issues.
-
-= 2.20 =
-
-Multiple checkboxes bugfix for separate repeatable fields.
-
-= 2.19 =
-
-Field keys in repeatable fields.
-
-= 2.18 =
-
-Bugfix for automatic field map creation.
-
-= 2.17 =
-
-Additional option for restricting user downloads by role or user ID.
-
-= 2.16 =
-
-Improved "role" shortcode parameter.
-
-= 2.15 =
-
-Improved "role" shortcode parameter.
-
-= 2.14 =
-
-New shortcode parameters (role, user). Improved formatting options.
-
-= 2.13 =
-
-Improved repeatable fields.
-
-= 2.12 =
-
-Bugfix for PDF filename in Firefox.
-
-= 2.11 =
-
-Image alignment options.
-
-= 2.10 =
-
-Image alignment options.
-
-= 2.9 =
-
-Updated Demo. Added automatic mapping for new field maps.
-
-= 2.8 =
-
-Uninstall hooks to delete all plugin data, when plugin is uninstalled.
-
-= 2.7 =
-
-Bugfix for checkboxes/radio labels.
-
-= 2.6 =
-
-Bugfix for checkboxes/radio labels
-
-= 2.5 =
-
-Additional date formats.
-
-= 2.4 =
-
-Additional date formats.
-
-= 2.3 =
-
-Bugfix for offline sites.
-
-= 2.2 =
-
-Bugfix for Capitalize ALL formatting option.
-
-= 2.1 =
-
-Bugfix for field names (IP, item key, ...).
-
-= 2.0 =
-
-Replaced field IDs with field keys in field map designer.
-Field map designer: save button will automatically select saved field map.
-Bugfix for generated PDF hook.
-Bugfix for multiple PDF attachments.
+Show only current site URL in admin
+Allow editors to manage fieldsets
+Optimize getting dataset field options
+Improved "role" shortcode parameter
+Additional option for restricting user downloads by role or user ID
+New shortcode parameters (role, user)
+Image alignment options
+Replaced field IDs with field keys in field map designer
+Field map designer save button auto-selects saved field map
 
 = 1.7.39 =
 
-Improvements for slow servers; options for offline websites.
-
-= 1.7.38 =
-
-Only compatible field maps for forms can be selected.
-
-= 1.7.37 =
-
-Licence key won't be removed automatically when the key expires.
-
-= 1.7.36 =
-
-Removed missing repeatble fields shortcodes.
-
-= 1.7.35 =
-
-Secure download links.
-
-= 1.7.34 =
-
-Plugin hook for saving PDFs.
-
-= 1.7.33 =
-
-Images in PDFs.
-
-= 1.7.32 =
-
-Date for Formidable updated at / created at fields is now in local time. Image uploads in PDF files.
-
-= 1.7.31 =
-
-Additional counters.
-
-= 1.7.30 =
-
-Additional Webform Data Field ID.
-
-= 1.7.29 =
-
-Additional formatting options that can be changed using a plugin.
-
-= 1.7.28 =
-
-Additional formatting option for numbers.
-
-= 1.7.27 =
-
-Additional formatting option to capitalize all text.
-
-= 1.7.26 =
-
-Additional formatting option for dates.
-
-= 1.7.25 =
-
-Additional formatting option for numbers.
-
-= 1.7.24 =
-
-Fix multiple checkbox fields for non-premium users.
-
-= 1.7.23 =
-
-Fix multiple checkbox fields for non-premium users.
-
-= 1.7.22 =
-
-Additional formatting options in repeatable fields.
-
-= 1.7.21 =
-
-Date formatting in repeatable fields.
-
-= 1.7.20 =
-
-TypeIn signatures support.
-
-= 1.7.19 =
-
-Fixed bug with saving field maps. Added automatic backups for your field maps.
-
-= 1.7.18 =
-
-Fixed bug with quotes in PDF field names.
-
-= 1.7.17 =
-
-Added a new field where you can change PDF file name in e-mails. Fixed issue with special characters in PDF field names.
-
-= 1.7.16 =
-
-Added a new field where you can change PDF file name in e-mails. Fixed issue with special characters in PDF field names.
-
-= 1.7.15 =
-
-Bugfixes, support for embedded form IDs.
-
-= 1.7.14 =
-
-Bugfixes.
-
-= 1.7.13 =
-
-New formatting option, bugfixes.
-
-= 1.7.12 =
-
-Added HTML fields, and a formatting option that removes empty lines in text field value.
-
-= 1.7.11 =
-
-Added warning for old Formidable plugin versions.
-
-= 1.7.10 =
-
-Temporary folder bugfix for some servers.
-
-= 1.7.9 =
-
-Bugfix for special UTF-8 characters.
-
-= 1.7.8 =
-
-New formatting option. Debug info for clients.
-
-= 1.7.7 =
-
-PDFaid bugfixes.
-
-= 1.7.6 =
-
-Added conversion to DOCX using PDFaid.
-
-= 1.7.5 =
-
-Bugfixes.
-
-= 1.7.4 =
-
-Added new flatten option to transform text into images. No one will be able to copy-paste text from your PDFs.
-
-= 1.7.3 =
-
-Made field map names required field.
-
-= 1.7.2 =
-
-Added settings page. Field previews won't slow down field map designer anymore (unless enabled in settings).
-
-= 1.7.1 =
-
-Bugfix for checkboxes.
-
-= 1.7.0 =
-
-Compatibility with WP 4.3. Possibility to select which e-mail notifications should have PDF attachments. New shortcode parameter label=0 that outputs only URL of the PDF file.
+Improvements for slow servers and options for offline websites
+Only compatible field maps for forms can be selected; made field map names required
+Licence key won’t be removed automatically when expired
+Removed missing repeatable fields shortcodes
+Secure download links
+Plugin hook for saving PDFs
+Images and image uploads in PDFs
+Date for Formidable updated/created fields now in local time
+Additional counters and Webform Data Field ID
+Additional formatting options for numbers, dates, capitalizing all text, repeatable fields, and removing empty lines in text fields
+Fix multiple checkbox fields for non-premium users and other checkbox bugfixes
+TypeIn signatures support
+Fixed bugs with saving field maps, quotes and special characters in PDF field names
+Added field to change PDF file name in emails
+Added HTML fields
+Warning for old Formidable plugin versions
+Temporary folder bugfix for some servers
+Bugfix for special UTF-8 characters
+New formatting options and general bugfixes
+Debug info for clients
+PDFaid bugfixes and added conversion to DOCX
+New flatten option to transform text into images to prevent copy-paste from PDFs
+Added settings page; field previews won’t slow down field map designer unless enabled
+Compatibility with WordPress 4.3
+Option to select which email notifications include PDF attachments
+New shortcode parameter label=0 that outputs only PDF URL
+Automatic backups for field maps
 
 = 1.6.0.17 =
 
-Bugfix
+Compatibility with WordPress 4.3, 4.2.2, and 4.2.1 (with Formidable Forms 2.0.04)
+Better support for multiple checkboxes and dynamic Formidable fields
+Added alert for PHP version, password protection, shortcodes, export into PDF, API interface, and Fields Map Designer
+Bugfixes including CSS conflict with Fusion Builder, missing files, saving layout, PHP warnings, encoding issues, and general bugfixing
+Added new formatting options for dates and removed extra lines in multiline text fields on some servers
+Added button to duplicate layouts and removed unused or default form files and WebForm fields
+Sorted WebForm Field IDs
+Updated plugin URL
+Signature plugin
+Email attachments support
+Add repeatable sections support
 
-= 1.6.0.16 =
-
-Compatibility with WordPress 4.3. Added formatting option for free version.
-
-= 1.6.0.15 =
-
-Better support for multiple checkboxes.
-
-= 1.6.0.14 =
-
-Added alert for PHP version, bugfixes.
-
-= 1.6.0.13 =
-
-Added support for dynamic Formidable fields.
-
-= 1.6.0.12 =
-
-Bugfix for CSS conflict with Fusion Builder.
-
-= 1.6.0.11 =
-
-Added new formatting options for dates. Removed extra lines in multiline text fields on some servers.
-
-= 1.6.0.10 =
-
-Add repeatable sections support.
-
-= 1.6.0.9 =
-
-Fix bug when saving layout.
-
-= 1.6.0.8 =
-
-Missing files bugfix.
-
-= 1.6.0.7 =
-
-Corrected encoding issues, added password protection, added button to duplicate layouts.
-
-= 1.6.0.6 =
-
-Removed PHP warnings, sorted WebForm Field IDs, removed unused WebForm Fields.
-
-= 1.6.0.5 =
-
-Updated plugin URL.
-
-= 1.6.0.4 =
-
-Signature plugin.
-
-= 1.6.0.3 =
-
-Bugfixing, email attachments.
-
-= 1.6.0.2 =
-
-Removed default form files, Tested compatibility with WordPress 4.2.2
-
-= 1.6.0.1 =
-
-Tested compatibility with WordPress 4.2.1 and Formidable Forms 2.0.04
-
-= 1.6 =
-
-Added shortcodes, export into PDF, API interface, Fields Map Designer.
+* Initial Release
 
 == Upgrade Notice ==
 
