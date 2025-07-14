@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name: Formidable PRO2PDF
- * Version: 3.21
+ * Version: 3.22
  * Description: This plugin allows to export data from Formidable Pro forms to PDF
  * Author: formidablepro2pdf.com
  * Plugin URI: http://www.formidablepro2pdf.com/
@@ -883,7 +883,7 @@ function fpropdf_check_code($code, $update = 0) {
             return true;
         }
     }
-    throw new Exception('This licence code is not valid.');
+    throw new Exception('The licence key code is not valid or expired.');
 }
 
 function wpfx_stripslashes_array($array) {
@@ -1514,16 +1514,24 @@ function wpfx_admin() {
             }
 
             $number_of_sites = count($result->sites);
-            echo '<div class="updated"><p>';
+
             if (fpropdf_is_trial()) {
+                echo '<div class="updated"><p>';
                 echo 'You can activate only 1 form on this website. Please <a href="#" class="button-primary fpropdf-activate">upgrade</a> if you want to use more forms.';
+                echo '</p></div>';
             } else {
+                if (strtotime(date('Y-m-d')) > strtotime($result->licence->expires_on)) {
+                    echo '<div class="error"><p>';
+                    echo '<b>The licence key has expired</b> - <a href="https://www.formidablepro2pdf.com/my-account/renewal-order-list/">Click to renew your licence key</a><br><br>';
+                } else {
+                    echo '<div class="updated"><p>';
+                }
                 echo 'Your licence key is <strong>' . esc_html($code) . '</strong>. <br /> It is valid until ' . date('m/d/Y', strtotime($result->licence->expires_on)) . ' <br />With this activation code, you can register up to <strong>' . esc_html($result->licence->sites) . '</strong> site' . ($result->licence->sites == 1 ? '' : 's') . ' and up to <strong>' . esc_html($result->licence->forms) . '</strong> form' . ($result->licence->forms == 1 ? '' : 's') . '. <a href="?page=fpdf&action=deactivatekey">Click here to deactivate this key.</a> </p><p>You have <strong>' . esc_html($result->sites_left) . '</strong> site' . (property_exists($result->licence, 'sites_left') && $result->licence->sites_left == 1 ? '' : 's') . ' and <strong>' . esc_html($result->forms_left) . '</strong> form' . (property_exists($result->licence, 'forms_left') && $result->licence->forms_left == 1 ? '' : 's') . ' left.';
                 if ($number_of_sites > 1) {
                     echo '<a href="http://www.formidablepro2pdf.com/my-account/" target="_blank">Click to manage your activation key</a>';
                 }
+                echo '</p></div>';
             }
-            echo '</p></div>';
 
             echo '<ol class="fpropdf-sites">';
             if (!count($result->sites)) {
@@ -2469,6 +2477,7 @@ function wpfx_peeklayout() {
                             'method' => 'POST',
                             'timeout' => 600,
                             'body' => array(
+                                'v' => FPROPDF_VERSION,
                                 'salt' => FPROPDF_SALT,
                                 'code' => get_option('fpropdf_licence'),
                                 'form' => $layout['form'],
@@ -2486,6 +2495,10 @@ function wpfx_peeklayout() {
                 if (!$data) {
                     throw new Exception('Server unknown data');
                 }
+                if (isset($data->error_server)) {
+                    throw new Exception($data->error_server);
+                }
+
                 $keys = explode(' ', 'fields fields2 checkboxes');
                 foreach ($keys as $key) {
                     if (isset($data->{$key}) && $data->{$key}) {

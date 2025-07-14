@@ -512,8 +512,10 @@ FOR INTERN.\n\
 
                     row.find('select').trigger('change');
                 });
-
                 recalcRadio(data.index);
+                if (jQuery('#wpfx_layout :selected').val() !== "3" && typeof data.error_server !== 'undefined' && data.error_server) {
+                    alert(data.error_server);
+                }
             }
         });
 
