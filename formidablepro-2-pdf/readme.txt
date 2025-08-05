@@ -1,7 +1,7 @@
 === Formidable PRO2PDF ===
 Contributors: rasmarcus
 Donate link: http://formidablepro2pdf.com/
-Tags: pro2pdf, pdf, generation, pdftk, formidable, forms, create
+Tags: pro2pdf, fpro2pdf, pdf, generation, pdftk, formidable, forms, create
 Requires at least: 3.0.1
 Tested up to: 6.8
 Stable tag: 3.22
