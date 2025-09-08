@@ -38,8 +38,8 @@ function fpropdf_debug_page() {
     } else {
         $version = array('version' => false);
     }
+    $debug[] = 'API Server: ' . FPROPDF_SERVER;
     $debug[] = 'CURL: ' . fpropdf_print($version['version']);
-
     $curl = false;
     if (function_exists('curl_init')) {
         $request = wp_remote_get(FPROPDF_SERVER . '/update/info.php?' . time());
@@ -52,7 +52,6 @@ function fpropdf_debug_page() {
     $debug[] = 'CURL Test: ' . fpropdf_print($curl);
     $debug[] = 'PHP Extensions: ' . fpropdf_print(get_loaded_extensions());
     $debug[] = 'Plugins: ' . fpropdf_print(get_option('active_plugins'));
-
     $debug[] = '';
     $folders = array(__DIR__ . '/fields/', sys_get_temp_dir(), FPROPDF_FORMS_DIR);
     foreach ($folders as $folder) {

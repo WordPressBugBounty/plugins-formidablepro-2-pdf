@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name: Formidable PRO2PDF
- * Version: 3.22
+ * Version: 3.23
  * Description: This plugin allows to export data from Formidable Pro forms to PDF
  * Author: formidablepro2pdf.com
  * Plugin URI: http://www.formidablepro2pdf.com/
@@ -13,7 +13,11 @@ if (!defined('ABSPATH')) {
 }
 
 if (!defined('FPROPDF_SERVER')) {
-    define('FPROPDF_SERVER', 'https://api.formidablepro2pdf.com');
+    if (get_option('fpropdf_api_server', '0') == '1') {
+        define('FPROPDF_SERVER', 'https://api2.formidablepro2pdf.com');
+    } else {
+        define('FPROPDF_SERVER', 'https://api.formidablepro2pdf.com');
+    }
 }
 
 require_once __DIR__ . '/classes/class-fpro2pdf.php';
@@ -1363,7 +1367,7 @@ function wpfx_admin() {
             );
 
             if (is_wp_error($request)) {
-                echo '<div class="error"><p>Unknown error. Please try again later.</p></div>';
+                echo "<div class='error'><p>" . $request->get_error_message() . " </p></div>";
             } else {
                 $result = json_decode(wp_remote_retrieve_body($request));
                 if (isset($result->success) && $result->success) {
@@ -1392,7 +1396,7 @@ function wpfx_admin() {
             );
 
             if (is_wp_error($request)) {
-                echo '<div class="error"><p>Unknown error. Please try again later.</p></div>';
+                echo "<div class='error'><p>" . $request->get_error_message() . " </p></div>";
             } else {
                 $result = json_decode(wp_remote_retrieve_body($request));
                 if ($result->success) {
@@ -1420,7 +1424,7 @@ function wpfx_admin() {
             );
 
             if (is_wp_error($request)) {
-                echo '<div class="error"><p>Unknown error. Please try again later.</p></div>';
+                echo "<div class='error'><p>" . $request->get_error_message() . " </p></div>";
             } else {
                 $result = json_decode(wp_remote_retrieve_body($request));
                 if ($result->success) {
@@ -1447,7 +1451,7 @@ function wpfx_admin() {
             );
 
             if (is_wp_error($request)) {
-                echo '<div class="error"><p>Unknown error. Please try again later.</p></div>';
+                echo "<div class='error'><p>" . $request->get_error_message() . " </p></div>";
             } else {
                 $result = json_decode(wp_remote_retrieve_body($request));
                 if ($result->success) {
@@ -1470,7 +1474,7 @@ function wpfx_admin() {
         );
 
         if (is_wp_error($request)) {
-            echo "<div class='error'><p>Unknown error. Please try again later.</p></div>";
+            echo "<div class='error'><p>" . $request->get_error_message() . " </p></div>";
         } else {
             $result = json_decode(wp_remote_retrieve_body($request));
             $found = false;

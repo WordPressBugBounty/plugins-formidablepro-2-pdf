@@ -61,6 +61,7 @@ function register_fpropdf_settings() {
     register_setting('fpropdf-settings-group', 'fpropdf_restrict_role');
     register_setting('fpropdf-settings-group', 'fpropdf_restrict_condition');
     register_setting('fpropdf-settings-group', 'fpropdf_field_map_allowed');
+    register_setting('fpropdf-settings-group', 'fpropdf_api_server');
 }
 
 function fpropdf_settings_page() {
@@ -78,9 +79,9 @@ function fpropdf_settings_page() {
     ?>
     <form method="post" action="options.php">
         <?php settings_fields('fpropdf-settings-group'); ?>
-            <?php do_settings_sections('fpropdf-settings-group'); ?>
+        <?php do_settings_sections('fpropdf-settings-group'); ?>
         <table class="form-table" width="100%">
-    <?php if (isset($_GET['show_hidden_options'])) { ?>
+            <?php if (isset($_GET['show_hidden_options'])) { ?>
                 <tr valign="top">
                     <td colspan="2">
                         <label>
@@ -95,7 +96,7 @@ function fpropdf_settings_page() {
                         </label>
                     </td>
                 </tr>
-    <?php } ?>
+            <?php } ?>
 
             <tr valign="top">
                 <td colspan="2">
@@ -186,12 +187,12 @@ function fpropdf_settings_page() {
                                />
                     </label>
                     <i>You can get a free API key with 20 credits here: <a href='http://www.pdfaid.com/api-registration.aspx' target='_blank'>http://www.pdfaid.com/api-registration.aspx</a></i>
-    <?php if (!$has_soap) { ?>
+                    <?php if (!$has_soap) { ?>
                         <i><b>PDFaid requires PHP SOAP extension. 
                                 <br />Until you install and activate this extension , generation of DOCX files won't be possible.
                                 <br />Please contact your hosting provider or server administrator to enable this extension.
                             </b></i>
-    <?php } ?>
+                    <?php } ?>
                 </td>
             </tr>
 
@@ -236,13 +237,10 @@ function fpropdf_settings_page() {
                         </div>
 
                     </div>
-
                     <a href="#" class="button" id="fpropdf_add_embedded_form" >Map another field</a>
-
                 </td>
             </tr>
-
-    <?php if (fpropdf_is_activated()) { ?>
+            <?php if (fpropdf_is_activated()) { ?>
                 <tr valign="top">
                     <td colspan="2">
                         <label>
@@ -271,9 +269,18 @@ function fpropdf_settings_page() {
                         </label>
                     </td>
                 </tr>
-
-    <?php } ?>
-
+            <?php } ?>
+            <tr valign="top">
+                <th>API Server</th>
+                <td>
+                    <label>
+                        <select name="fpropdf_api_server">
+                            <option value="0"<?php echo (get_option('fpropdf_api_server', '0') == '0' ? ' selected="selected"' : ''); ?>>api.formidablepro2pdf.com</option>
+                            <option value="1"<?php echo (get_option('fpropdf_api_server', '0') == '1' ? ' selected="selected"' : ''); ?>>api2.formidablepro2pdf.com</option>
+                        </select>
+                    </label>
+                </td>
+            </tr>
             <tr valign="top">
                 <th>Allow downloads only for these user roles:</th>
                 <td>
@@ -325,7 +332,7 @@ function fpropdf_settings_page() {
             </tr>
 
         </table>
-    <?php submit_button(); ?>
+        <?php submit_button(); ?>
     </form>
     <?php
 }
