@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name: Formidable PRO2PDF
- * Version: 3.23
+ * Version: 3.24
  * Description: This plugin allows to export data from Formidable Pro forms to PDF
  * Author: formidablepro2pdf.com
  * Plugin URI: http://www.formidablepro2pdf.com/
@@ -148,6 +148,28 @@ function fpropdf_dataset_key($dataset, $form, $layout, $user = '', $role = '', $
         $layout .= $user . ',' . $role . ',' . $condition;
     }
     return md5(implode(',', array(NONCE_SALT, $wpdb->prefix, $dataset, $form, $layout)));
+}
+
+function frpopdf_sanitize_textarea_field($str) {
+    if (is_object($str) || is_array($str)) {
+        return '';
+    }
+    $str = (string) $str;
+    $filtered = wp_check_invalid_utf8($str);
+    if (str_contains($filtered, '<')) {
+        $filtered = wp_pre_kses_less_than($filtered);
+        $filtered = wp_strip_all_tags($filtered, false);
+        $filtered = str_replace("<\n", "&lt;\n", $filtered);
+    }
+    $found = false;
+    while (preg_match('/%[a-f0-9]{2}/i', $filtered, $match)) {
+        $filtered = str_replace($match[0], '', $filtered);
+        $found = true;
+    }
+    if ($found) {
+        $filtered = preg_replace('/ +/', ' ', $filtered);
+    }
+    return $filtered;
 }
 
 function fpropdf_admin_head() {
@@ -1194,11 +1216,11 @@ function wpfx_admin() {
                 $formats[] = array(
                     $to,
                     $_f,
-                    isset($_POST['repeatable_field'][$index]) ? sanitize_textarea_field(wp_unslash($_POST['repeatable_field'][$index])) : '',
+                    isset($_POST['repeatable_field'][$index]) ? frpopdf_sanitize_textarea_field(wp_unslash($_POST['repeatable_field'][$index])) : '',
                     isset($_POST['checkbox_field'][$index]) ? sanitize_text_field(wp_unslash($_POST['checkbox_field'][$index])) : '',
                     isset($_POST['image_field'][$index]) ? sanitize_text_field(wp_unslash($_POST['image_field'][$index])) : '',
-                    isset($_POST['address_field'][$index]) ? sanitize_textarea_field(wp_unslash($_POST['address_field'][$index])) : '',
-                    isset($_POST['credit_card_field'][$index]) ? sanitize_textarea_field(wp_unslash($_POST['credit_card_field'][$index])) : '',
+                    isset($_POST['address_field'][$index]) ? frpopdf_sanitize_textarea_field(wp_unslash($_POST['address_field'][$index])) : '',
+                    isset($_POST['credit_card_field'][$index]) ? frpopdf_sanitize_textarea_field(wp_unslash($_POST['credit_card_field'][$index])) : '',
                     isset($_POST['image_rotation'][$index]) ? sanitize_text_field(wp_unslash($_POST['image_rotation'][$index])) : '',
                 );
 
@@ -1367,7 +1389,7 @@ function wpfx_admin() {
             );
 
             if (is_wp_error($request)) {
-                echo "<div class='error'><p>" . $request->get_error_message() . " </p></div>";
+                echo "<div class='error'><p>" . $request->get_error_message() . "</p></div>";
             } else {
                 $result = json_decode(wp_remote_retrieve_body($request));
                 if (isset($result->success) && $result->success) {
@@ -1396,7 +1418,7 @@ function wpfx_admin() {
             );
 
             if (is_wp_error($request)) {
-                echo "<div class='error'><p>" . $request->get_error_message() . " </p></div>";
+                echo "<div class='error'><p>" . $request->get_error_message() . "</p></div>";
             } else {
                 $result = json_decode(wp_remote_retrieve_body($request));
                 if ($result->success) {
@@ -1424,7 +1446,7 @@ function wpfx_admin() {
             );
 
             if (is_wp_error($request)) {
-                echo "<div class='error'><p>" . $request->get_error_message() . " </p></div>";
+                echo "<div class='error'><p>" . $request->get_error_message() . "</p></div>";
             } else {
                 $result = json_decode(wp_remote_retrieve_body($request));
                 if ($result->success) {
@@ -1451,7 +1473,7 @@ function wpfx_admin() {
             );
 
             if (is_wp_error($request)) {
-                echo "<div class='error'><p>" . $request->get_error_message() . " </p></div>";
+                echo "<div class='error'><p>" . $request->get_error_message() . "</p></div>";
             } else {
                 $result = json_decode(wp_remote_retrieve_body($request));
                 if ($result->success) {
@@ -1474,7 +1496,7 @@ function wpfx_admin() {
         );
 
         if (is_wp_error($request)) {
-            echo "<div class='error'><p>" . $request->get_error_message() . " </p></div>";
+            echo "<div class='error'><p>" . $request->get_error_message() . "</p></div>";
         } else {
             $result = json_decode(wp_remote_retrieve_body($request));
             $found = false;

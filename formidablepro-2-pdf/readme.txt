@@ -3,8 +3,8 @@ Contributors: rasmarcus
 Donate link: http://formidablepro2pdf.com/
 Tags: pro2pdf, fpro2pdf, pdf, generation, pdftk, formidable, forms, create
 Requires at least: 3.0.1
-Tested up to: 6.8
-Stable tag: 3.23
+Tested up to: 7.0
+Stable tag: 3.24
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -113,6 +113,9 @@ Yes, the plugin works with WordPress Multisite. Site limits still apply.
 6. Templates Page.
 
 == Changelog ==
+
+= 3.24 =
+Preserve newlines in formatting field fix
 
 = 3.23 =
 API server switcher
