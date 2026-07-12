@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name: Formidable PRO2PDF
- * Version: 3.24
+ * Version: 3.25
  * Description: This plugin allows to export data from Formidable Pro forms to PDF
  * Author: formidablepro2pdf.com
  * Plugin URI: http://www.formidablepro2pdf.com/
@@ -944,7 +944,7 @@ function wpfx_admin() {
         }
     }
 
-    if (isset($_FILES['postdata'])) {
+    if (isset($_FILES['postdata']) && wp_verify_nonce(sanitize_key($_POST['_wpnonce']), 'fpropdf_wpfx_savecl')) {
         $_POST['wpfx_savecl'] = 1;
         $file = isset($_FILES['postdata']['tmp_name']) ? $_FILES['postdata']['tmp_name'] : ''; //phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- Reason: https://github.com/WordPress/WordPress-Coding-Standards/issues/1720
         if ($file && file_exists($file)) {
